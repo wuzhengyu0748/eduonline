@@ -35,5 +35,8 @@ urlpatterns = [
     url(r'^media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT}),
 
     # 机构相关
-    url(r'^org/', include(('apps.organizations.urls', 'organizations'), namespace='org'))
+    url(r'^org/', include(('apps.organizations.urls', 'organizations'), namespace='org')),
+
+    # 用户操作相关
+    url(r'^op/', include(('apps.operation.urls', 'operation'), namespace='op'))
 ]
