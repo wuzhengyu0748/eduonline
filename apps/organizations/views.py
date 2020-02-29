@@ -4,9 +4,55 @@ from django.http import JsonResponse
 
 from pure_pagination import Paginator, PageNotAnInteger
 
-from apps.organizations.models import CourseOrg, City
+from apps.organizations.models import CourseOrg, City, Teacher
 from apps.organizations.forms import AddAskForm
 from apps.operation.models import UserFavorite
+
+class TeacherDetailView(View):
+    def get(self, request, teacher_id, *args, **kwargs):
+        teacher = Teacher.objects.get(id=int(teacher_id))
+        hot_teachers = Teacher.objects.order_by('-click_nums')[:3]
+
+        teacher_fav = False
+        org_fav = False
+        if request.user.is_authenticated:
+            if UserFavorite.objects.filter(user=request.user, fav_id=teacher_id, fav_type=3):
+                teacher_fav = True
+            if UserFavorite.objects.filter(user=request.user, fav_id=teacher.org.id, fav_type=2):
+                org_fav = True
+
+        return render(request, 'teacher-detail.html', {
+            'teacher' : teacher,
+            'teacher_fav' : teacher_fav,
+            'org_fav' : org_fav,
+            'hot_teachers' : hot_teachers,
+        })
+
+class TeacherListView(View):
+    def get(self, request, *args, **kwargs):
+        all_teachers = Teacher.objects.all()
+        teacher_nums = all_teachers.count()
+
+        hot_teachers = Teacher.objects.order_by('-click_nums')[:3]
+
+        sort = request.GET.get('sort', '')
+        if sort == 'hot':
+            all_teachers = all_teachers.order_by('-click_nums')
+
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_teachers, per_page=10, request=request)
+        teachers = p.page(page)
+
+        return render(request, 'teachers-list.html', {
+            'all_teachers' : teachers,
+            'teacher_nums' : teacher_nums,
+            'sort' : sort,
+            'hot_teachers' : hot_teachers,
+        })
 
 class OrgDescView(View):
     def get(self, request, org_id, *args, **kwargs):

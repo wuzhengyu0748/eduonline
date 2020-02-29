@@ -28,7 +28,7 @@
 					</div>
 					<div class="des">
 						<h1 title="django 从入门到精通体验开始了"> {{ course.name }}</h1>
-						<span class="key">{{ course.teacher_tell }}</span>
+						<span class="key">{{ course.desc }}</span>
 						<div class="prize">
 							<span class="fl">难度：<i class="key">{{ course.get_degree_display }}</i></span>
 							<span class="fr">学习人数：{{ course.students }}</span>
@@ -47,7 +47,7 @@
 							<div class="btn colectgroupbtn"  id="jsLeftBtn">
                                 {% if has_fav_course %}已收藏{% else %}收藏{% endif %}
                             </div>
-                                <div class="buy btn"><a style="color: white" href="course-video.html">开始学习</a></div>
+                                <div class="buy btn"><a style="color: white" href="{% url 'course:lesson' course.id %}">开始学习</a></div>
 						</div>
 					</div>
                     <div class="group-share-box">

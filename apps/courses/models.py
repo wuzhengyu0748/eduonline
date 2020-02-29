@@ -14,6 +14,7 @@ class Course(BaseModel):
     students = models.IntegerField(default=0, verbose_name='学习人数')
     fav_nums = models.IntegerField(default=0, verbose_name='收藏人数')
     click_nums = models.IntegerField(default=0, verbose_name='点击数')
+    notice = models.CharField(max_length=300, default="", verbose_name='课程公告')
     category = models.CharField(default="后端开发", max_length=20, verbose_name='课程类别')
     tag = models.CharField(default='', max_length=10, verbose_name='课程标签')
     youneed_know = models.CharField(default='', max_length=300, verbose_name='课程须知')
@@ -59,7 +60,7 @@ class Video(BaseModel):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='章节')
     name = models.CharField(max_length=100, verbose_name='视频名')
     learn_times = models.IntegerField(default=0, verbose_name='学习时长(分钟数)')
-    url = models.CharField(max_length=200, verbose_name='视频地址')
+    url = models.CharField(max_length=1000, verbose_name='视频地址')
 
     class Meta:
         verbose_name = '课程视频'
