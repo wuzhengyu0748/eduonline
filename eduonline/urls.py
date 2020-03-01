@@ -39,5 +39,7 @@ urlpatterns = [
     # 用户操作相关
     url(r'^op/', include(('apps.operation.urls', 'operation'), namespace='op')),
     # 课程相关
-    url(r'^course/', include(('apps.courses.urls', 'operation'), namespace='course')),
+    url(r'^course/', include(('apps.courses.urls', 'courses'), namespace='course')),
+    # 用户个人中心相关
+    url(r'^users/', include(('apps.users.urls', 'users'), namespace='users')),
 ]
