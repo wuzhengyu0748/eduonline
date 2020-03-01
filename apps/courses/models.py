@@ -22,6 +22,7 @@ class Course(BaseModel):
     is_classics = models.BooleanField(default=False, verbose_name='是否经典课程')
     detail = models.TextField(verbose_name='课程详情')
     thumb = models.ImageField(upload_to='courses/%Y/%m', max_length=100, verbose_name='封面图')
+    is_banner = models.BooleanField(default=False, verbose_name='是否广告位')
 
     class Meta:
         verbose_name = '课程信息'
