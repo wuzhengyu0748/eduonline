@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 from pure_pagination import Paginator, PageNotAnInteger
 
@@ -131,6 +132,11 @@ class CourseListView(View):
         all_courses = Course.objects.order_by("-add_time")
         hot_courses = Course.objects.order_by('-click_nums')[:3]
 
+        keywords = request.GET.get("keywords", "")
+        s_type = 'course'
+        if keywords:
+            all_courses = all_courses.filter(Q(name__icontains=keywords)| Q(desc__icontains=keywords) | Q(detail__icontains=keywords))
+
         sort = request.GET.get("sort", "")
         if sort == 'students':
             all_courses = all_courses.order_by('-students')
@@ -148,5 +154,7 @@ class CourseListView(View):
             'all_courses' : courses,
             'sort' : sort,
             'hot_courses' : hot_courses,
+            'keywords' : keywords,
+            's_type' : s_type,
         })
 

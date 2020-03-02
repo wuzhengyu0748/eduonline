@@ -11,9 +11,9 @@
 		<div class="brief group_list">
             {% for course in all_courses %}
                 <div class="module1_5 box">
-                    <a href="course-detail.html"><img width="214" src="{{ MEDIA_URL }}{{ course.thumb }}"/></a>
+                    <a href="{% url 'course:detail' course.id %}"><img width="214" src="{{ MEDIA_URL }}{{ course.thumb }}"/></a>
                     <div class="des">
-                        <a href="course-detail.html"><h2>{{ course.name }}</h2></a>
+                        <a href="{% url 'course:detail' course.id %}"><h2>{{ course.name }}</h2></a>
                         <span class="fl">课时：<i class="key">{{ course.learn_times }}</i></span>
                         <span class="fr">参加人数：{{ course.students }}</span>
                     </div>
@@ -44,7 +44,7 @@
             <div class="right">
                 <div class="top">
                     <div class="fl">
-                        <a href=""><h1>{{ teacher.work_position }}</h1></a>
+                        <a href="javascript:;"><h1>{{ teacher.work_position }}</h1></a>
                         <span>工作年限：{{ teacher.work_years }}</span>
                     </div>
                 </div>

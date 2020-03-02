@@ -85,7 +85,7 @@
                             <li class="pic10" style="padding-left:18px;">经典课程：
                                 {% if org.courses %}
                                     {% for course in org.courses %}
-                                        <a href="/diary/19/">{{ course.name }}</a>
+                                        <a href="{% url 'course:detail' course.id %}">{{ course.name }}</a>
                                     {% endfor %}
                                 {% else %}
                                     无
@@ -149,7 +149,7 @@
                     <dl class="des">
                         <dt class="num fl">{{ forloop.counter }}</dt>
                         <dd>
-                            <a href="/company/2/"><h1>{{ hot_org.name }}</h1></a>
+                            <a href="{% url 'org:home' hot_org.id %}"><h1>{{ hot_org.name }}</h1></a>
                             <p>{{ hot_org.address}}</p>
                         </dd>
                     </dl>

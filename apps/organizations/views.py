@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import JsonResponse
+from django.db.models import Q
 
 from pure_pagination import Paginator, PageNotAnInteger
 
@@ -35,6 +36,11 @@ class TeacherListView(View):
 
         hot_teachers = Teacher.objects.order_by('-click_nums')[:3]
 
+        keywords = request.GET.get("keywords", "")
+        s_type = 'teacher'
+        if keywords:
+            all_teachers = all_teachers.filter(Q(name__icontains=keywords))
+
         sort = request.GET.get('sort', '')
         if sort == 'hot':
             all_teachers = all_teachers.order_by('-click_nums')
@@ -52,6 +58,8 @@ class TeacherListView(View):
             'teacher_nums' : teacher_nums,
             'sort' : sort,
             'hot_teachers' : hot_teachers,
+            'keywords' : keywords,
+            's_type' : s_type,
         })
 
 class OrgDescView(View):
@@ -165,6 +173,11 @@ class OrgView(View):
         all_citys = City.objects.all()
         hot_orgs = all_orgs.order_by('-click_nums')[:3]
 
+        keywords = request.GET.get("keywords", "")
+        s_type = 'org'
+        if keywords:
+            all_orgs = all_orgs.filter(Q(name__icontains=keywords)| Q(desc__icontains=keywords))
+
         category = request.GET.get('ct', '')
         if category:
             all_orgs = all_orgs.filter(category=category)
@@ -198,4 +211,6 @@ class OrgView(View):
             'city_id' : city_id,
             'sort' : sort,
             'hot_orgs' : hot_orgs,
+            'keywords' : keywords,
+            's_type' : s_type,
         })

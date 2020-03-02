@@ -31,6 +31,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
 
     url(r'^media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT}),
+    # url(r'^static/(?P<path>.*)$', serve, {'document_root':STATIC_ROOT}),
 
     # 机构相关
     url(r'^org/', include(('apps.organizations.urls', 'organizations'), namespace='org')),

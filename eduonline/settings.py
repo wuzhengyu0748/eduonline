@@ -25,7 +25,7 @@ SECRET_KEY = '52rin3vxtsb*^&g+a28mcz^04p8#ygqk&qb_4v3flqn07!o-ik'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -138,9 +138,14 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 PAGINATION_SETTINGS = {
     'PAGE_RANGE_DISPLAYED': 10,
     'MARGIN_PAGES_DISPLAYED': 2,
     'SHOW_FIRST_PAGE_WHEN_INVALID': True,
 }
+
+AUTHENTICATION_BACKENDS = [
+    "apps.users.views.CustomAuth"
+]

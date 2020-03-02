@@ -38,9 +38,9 @@
                             <li><span class="pram word3">章&nbsp;节&nbsp;数：</span><span>{{ course.lesson_nums }}</span></li>
                             <li><span class="pram word3">课程类别：</span><span title="">{{ course.category }}</span></li>
 							<li class="piclist"><span class="pram word4">学习用户：</span>
-
-                                    <span class="pic"><img width="40" height="40" src="../media/image/2016/12/default_big_14.png"/></span>
-
+                                {% for user_course in course.usercourse_set.all|slice:3 %}
+                                    <span class="pic"><img width="40" height="40" src="{{ user_course.user.head_image.url }}"/></span>
+                                {% endfor %}
 							</li>
 						</ul>
 						<div class="btns">
@@ -130,12 +130,12 @@
                     {% for course in related_course %}
                         <dl>
                             <dt>
-                                <a target="_blank" href="">
+                                <a target="_blank" href="{% url 'course:detail' course.id %}">
                                     <img width="240" height="220" class="scrollLoading" src="{{ course.thumb.url }}"/>
                                 </a>
                             </dt>
                             <dd>
-                                <a target="_blank" href=""><h2> {{ course.name }}</h2></a>
+                                <a target="_blank" href="{% url 'course:detail' course.id %}"><h2> {{ course.name }}</h2></a>
                                 <span class="fl">学习时长：<i class="key">{{ course.learn_times }}</i></span>
                             </dd>
                         </dl>

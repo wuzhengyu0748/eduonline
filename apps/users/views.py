@@ -5,12 +5,14 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
 
 from pure_pagination import Paginator, PageNotAnInteger
 
 from apps.users.forms import LoginForm, RegisterForm, UploadImageForm, UserInfoForm, ChangePwdForm
 from apps.users.models import UserProfile
-from apps.operation.models import UserFavorite, UserMessage
+from apps.operation.models import UserFavorite, UserMessage, Banner
 from apps.organizations.models import CourseOrg, Teacher
 from apps.courses.models import Course
 
@@ -19,6 +21,16 @@ def message_nums(request):
         return {"unread_nums": request.user.usermessage_set.filter(has_read=False).count()}
     else:
         return {}
+
+class CustomAuth(ModelBackend):
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        try:
+            user = UserProfile.objects.get(Q(username=username) | Q(mobile=username))
+            if user.check_password(password):
+                return user
+        except Exception as e:
+            return None
+
 
 class MyMessageView(LoginRequiredMixin, View):
     login_url = '/login/'
@@ -137,9 +149,13 @@ class UserInfoView(LoginRequiredMixin, View):
 
 class RegisterView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'register.html')
+        banners = Banner.objects.all()
+        return render(request, 'register.html', {
+            "banners" : banners,
+        })
 
     def post(self, request, *args, **kwargs):
+        banners = Banner.objects.all()
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
             mobile = register_form.cleaned_data['mobile']
@@ -151,7 +167,10 @@ class RegisterView(View):
             login(request, user)
             return HttpResponseRedirect(reverse('index'))
         else:
-            return render(request, "register.html", {"register_form": register_form})
+            return render(request, "register.html", {
+                "register_form": register_form,
+                "banners": banners,
+            })
 
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
@@ -160,14 +179,17 @@ class LogoutView(View):
 
 class LoginView(View):
     def get(self, request, *args, **kwargs):
+        banners = Banner.objects.all()
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('index'))
         next = request.GET.get('next', '')
         return render(request, 'login.html', {
             "next" : next,
+            "banners" : banners,
         })
 
     def post(self, request, *args, **kwargs):
+        banners = Banner.objects.all()
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             user_name = login_form.cleaned_data['username']
@@ -180,6 +202,13 @@ class LoginView(View):
                     return HttpResponseRedirect(next)
                 return HttpResponseRedirect(reverse('index'))
             else:
-                return render(request, "login.html", {"msg":"用户名或密码错误", "login_form": login_form})
+                return render(request, "login.html", {
+                    "msg":"用户名或密码错误",
+                    "login_form": login_form,
+                    "banners": banners,
+                })
         else:
-            return render(request, "login.html", {"login_form": login_form})
+            return render(request, "login.html", {
+                "login_form": login_form,
+                "banners": banners,
+            })
